@@ -73,4 +73,5 @@ board.on('ready', function () {
     allServos,
     walkCycle: () => walkCycle(allServos)
   });
+  console.log('Execute walkCycle() to begin sequence.');
 });

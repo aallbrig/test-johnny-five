@@ -51,4 +51,5 @@ board.on("ready", function () {
     servoTest: () => fastServoTest(allServos),
     continuousServoTest: () => continuousServoTest(allServos)
   });
+  console.log('Try servoTest() or continuousServoTest() .');
 });
