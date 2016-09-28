@@ -14,6 +14,7 @@ function walkCycle (allServos) {
   //   e.g. LBL == "Left Back Leg"
   // const [min, max] = servo.range;
   //   meaning servo.range[0] === min, servo.range[1] === max
+  const timing = 3000;
   const [
     LBL, LBB, LFB, LFL,
     RBL, RBB, RFB, RFL
@@ -21,10 +22,10 @@ function walkCycle (allServos) {
   const stateA = () => {
     // TODO: Pass in "time to complete servo movement" (body's 1000ms)
     // body
-    LBB.to(min(LBB.range), 1000);
-    LFB.to(max(LFB.range), 1000);
-    RBB.to(min(RBB.range), 1000);
-    RFB.to(max(RFB.range), 1000);
+    LBB.to(min(LBB.range), timing);
+    LFB.to(max(LFB.range), timing);
+    RBB.to(min(RBB.range), timing);
+    RFB.to(max(RFB.range), timing);
     // legs
     LBL.to(max(LBL.range));
     LFL.to(mid(LFL.range));
@@ -34,10 +35,10 @@ function walkCycle (allServos) {
   const stateB = () => {
     // TODO: Pass in "time to complete servo movement" (body's 1000ms)
     // body
-    LBB.to(max(LBB.range), 1000);
-    LFB.to(min(LFB.range), 1000);
-    RBB.to(max(RBB.range), 1000);
-    RFB.to(min(RFB.range), 1000);
+    LBB.to(max(LBB.range), timing);
+    LFB.to(min(LFB.range), timing);
+    RBB.to(max(RBB.range), timing);
+    RFB.to(min(RFB.range), timing);
     // legs
     LBL.to(mid(LBL.range));
     LFL.to(max(LFL.range));
@@ -49,8 +50,8 @@ function walkCycle (allServos) {
     stateA();
     setTimeout(() => {
       stateB();
-    }, 1000);
-  }, 2000);
+    }, timing);
+  }, timing * 2);
 }
 
 board.on('ready', function () {
