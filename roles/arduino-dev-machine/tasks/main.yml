@@ -1,0 +1,4 @@
+---
+  - include: osx_install-drivers.yml
+    when: ansible_os_family == 'Darwin'
+  - include: node.yml

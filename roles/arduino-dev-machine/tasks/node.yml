@@ -1,0 +1,10 @@
+---
+  - name: Install Node Version Manager
+    npm: name=nvm global=yes
+
+  # TODO: get `nvm use` command working
+  # - name: Switch to node version
+  #   command: nvm use
+
+  - name: Install from package control
+    npm: path=./

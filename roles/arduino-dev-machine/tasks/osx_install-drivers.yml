@@ -1,0 +1,10 @@
+---
+- name: Creates temporary directory
+  file: path=tmp state=directory
+
+- name: Unzip CH340 Driver
+  unarchive: src=files/CH34x_Install_V1.3.zip dest=tmp
+
+# TODOL: Get PKG installation operational
+# - name: Install PKG
+#   pkgng: name=tmp/CH34x_Install_V1.3.pkg state=present

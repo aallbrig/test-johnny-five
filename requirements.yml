@@ -1,0 +1,2 @@
+# from ansible galaxy
+- src: geerlingguy.homebrew

@@ -1,0 +1,19 @@
+- name: Install prereq software
+  hosts: local
+  connection: local
+  vars:
+    homebrew_installed_packages:
+      - git
+      - node
+    homebrew_cask_apps:
+      - atom
+      - arduino
+  roles:
+    - geerlingguy.homebrew
+
+
+- name: Do all tasks to get machine
+  hosts: local
+  connection: local
+  roles:
+    - arduino-dev-machine
