@@ -3,10 +3,11 @@ const _ = require('lodash');
 const board = new five.Board();
 const legServoPins = [12,       9, 8,     5];
 const bodyServoPins = [  11, 10,     7, 6];
-
 const mid = ([min, max]) => (min + max) / 2;
 const max = ([min, max]) => max;
 const min = ([min, max]) => min;
+const sortServosByPin = (servos) =>
+  servos.sort((a, b) => a.pin > b.pin).reverse();
 
 function walkCycle (allServos) {
   // Take advantage of position.  NOTE: brittle code!
@@ -48,26 +49,22 @@ function walkCycle (allServos) {
   stateB();  // initial state
   setInterval(() => {
     stateA();
-    setTimeout(() => {
-      stateB();
-    }, timing);
+    setTimeout(() => stateB(), timing);
   }, timing * 2);
 }
 
 board.on('ready', function () {
-  const legServos = legServoPins.map((pin) =>
-    new five.Servo({
-      pin,
-      range: [30, 135],
-      startAt: 90
-    }));
-  const bodyServos = bodyServoPins.map(pin =>
-    new five.Servo({
-      pin,
-      range: [45, 135],
-      startAt: 90
-    }));
-  const allServos = [...legServos, ...bodyServos].sort((a, b) => a.pin > b.pin).reverse();
+  const legServos = legServoPins.map(pin => new five.Servo({
+    pin,
+    range: [30, 135],
+    startAt: 90
+  }));
+  const bodyServos = bodyServoPins.map(pin => new five.Servo({
+    pin,
+    range: [45, 135],
+    startAt: 90
+  }));
+  const allServos = sortServosByPin([...legServos, ...bodyServos]);
   this.repl.inject({
     legServos,
     bodyServos,

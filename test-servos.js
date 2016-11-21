@@ -9,7 +9,8 @@ const loggedAverage = (a) => {
   console.log(`result: ${result}`);
   return result;
 };
-const sortServosByPin = (servos) => servos.sort((a, b) => a.pin > b.pin).reverse();
+const sortServosByPin =
+  (servos) => servos.sort((a, b) => a.pin > b.pin).reverse();
 const servoTest = _.curry((time, servos) => {
   servos.forEach((servo, index) => {
     const {range} = servo;
@@ -31,7 +32,7 @@ function continuousServoTest (servos) {
 }
 
 board.on("ready", function () {
-  const legServos = legServoPins.map((pin) => new five.Servo({
+  const legServos = legServoPins.map(pin => new five.Servo({
     pin,
     range: [0, 180],
     startAt: 90
