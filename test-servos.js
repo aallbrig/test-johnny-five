@@ -48,7 +48,9 @@ board.on("ready", function () {
     bodyServos,
     allServos,
     servoTest: () => fastServoTest(allServos),
-    continuousServoTest: () => continuousServoTest(allServos)
+    continuousServoTest: () => continuousServoTest(allServos),
+    stopContinous: clearInterval
   });
   console.log('Try servoTest() or continuousServoTest() .');
+  console.log('Stop continuous test via stopContinous(fnId)');
 });

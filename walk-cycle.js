@@ -47,7 +47,7 @@ function walkCycle (allServos) {
     RFL.to(mid(RFL.range));
   }
   stateB();  // initial state
-  setInterval(() => {
+  return setInterval(() => {
     stateA();
     setTimeout(() => stateB(), timing);
   }, timing * 2);
@@ -69,7 +69,9 @@ board.on('ready', function () {
     legServos,
     bodyServos,
     allServos,
-    walkCycle: () => walkCycle(allServos)
+    walkCycle: () => walkCycle(allServos),
+    stopContinous: clearInterval
   });
   console.log('Execute walkCycle() to begin sequence.');
+  console.log('Stop continuous test via stopContinous(fnId)');
 });
