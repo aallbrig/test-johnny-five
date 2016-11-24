@@ -1,28 +1,20 @@
 function setup_osx {
   echo "osx"
-  which -s brew
+  # Install prerequisites.
+  pip --version
   if [[ $? != 0 ]] ; then
-    echo "installing brew"
-    /usr/bin/ruby -e "$(curl -fsSL https://raw.github.com/gist/323731)"
-  else
-    echo "updating brew"
-    brew update
+    echo "No valid pip installed.  Installing..."
+    sudo easy_install pip
   fi
-  brew ls --versions ansible
+  ansible --version
   if [[ $? != 0 ]] ; then
-    echo "installing ansible"
-    brew install ansible
-  else
-    echo "updating ansible"
-    brew upgrade ansible
-    echo "    ^-- error means you're already up to date."
+    echo "No valid ansible installed.  Installing..."
+    sudo pip install ansible
   fi
-  sudo pip install -r requirements.txt
+  sudo ansible-galaxy install -r provisioning/requirements.yml
 
-  # Ansible install packages
-  sudo ansible-galaxy install -r requirements.yml
-  # Ansible install based on config values
-  ansible-playbook setup.yml -i HOSTS --ask-sudo-pass  --module-path ./ansible_modules --extra-vars "@config.json"
+  # Provision dev machine.
+  ansible-playbook provisioning/setup-dev-machine.yml
   exit 0
 }
 

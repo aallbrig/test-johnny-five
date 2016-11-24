@@ -1,0 +1,4 @@
+- name: Install prereq software
+  hosts: local
+  roles:
+    - arduino-dev-machine
