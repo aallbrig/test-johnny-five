@@ -6,22 +6,19 @@ const bodyServoPins = [  11, 10,     7, 6];
 const mid = ([min, max]) => (min + max) / 2;
 const max = ([min, max]) => max;
 const min = ([min, max]) => min;
-const sortServosByPin = (servos) =>
-  servos.sort((a, b) => a.pin > b.pin).reverse();
-
-function walkCycle (allServos) {
-  // Take advantage of position.  NOTE: brittle code!
+const sortServosByPin = (servos) => servos.sort((a, b) => a.pin < b.pin);
+const walkCycle = (allServos, timing = 3000) => {
+  // Take advantage of known pin hookups.  NOTE: brittle code (kinda)!
   // Name Schema: (R"ight" || L"eft") + (B"ack" || F"ront") + (B"ody" || L"eg")
   //   e.g. LBL == "Left Back Leg"
   // const [min, max] = servo.range;
   //   meaning servo.range[0] === min, servo.range[1] === max
-  const timing = 3000;
   const [
     LBL, LBB, LFB, LFL,
     RBL, RBB, RFB, RFL
   ] = allServos;
+  // TODO: Redo "stateA", "stateB" logic using johnny5's animation lib
   const stateA = () => {
-    // TODO: Pass in "time to complete servo movement" (body's 1000ms)
     // body
     LBB.to(min(LBB.range), timing);
     LFB.to(max(LFB.range), timing);
@@ -34,7 +31,6 @@ function walkCycle (allServos) {
     RFL.to(max(RFL.range));
   }
   const stateB = () => {
-    // TODO: Pass in "time to complete servo movement" (body's 1000ms)
     // body
     LBB.to(max(LBB.range), timing);
     LFB.to(min(LFB.range), timing);

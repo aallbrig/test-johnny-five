@@ -1,7 +1,7 @@
 {
   "name": "johnny-five-practice",
   "version": "1.0.0",
-  "description": "",
+  "description": "This project is to test out a specific robot.  You can either test out the servos (e.g. to know hookup is correct) or test out a simple walk cycle.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
