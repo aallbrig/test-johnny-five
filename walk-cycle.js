@@ -16,7 +16,7 @@ const walkCycle = (allServos, timing = 3000) => {
   const [
     LBL, LBB, LFB, LFL,
     RBL, RBB, RFB, RFL
-  ] = allServos;
+  ] = allServos;  //  <-- Known pin hookups aka the "brittle"
   // TODO: Redo "stateA", "stateB" logic using johnny5's animation lib
   const stateA = () => {
     // body
