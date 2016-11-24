@@ -1,10 +1,16 @@
 ---
-- name: Creates temporary directory
-  file: path=tmp state=directory
+- name: Create temp directory
+  file: path={{playbook_dir}}/tmp state=directory
 
 - name: Unzip CH340 Driver
-  unarchive: src=files/CH34x_Install_V1.3.zip dest=tmp
+  unarchive: src={{item}} dest={{playbook_dir}}/tmp
+  with_fileglob: files/*.zip
 
-# TODOL: Get PKG installation operational
-# - name: Install PKG
-#   pkgng: name=tmp/CH34x_Install_V1.3.pkg state=present
+- name: Install PKG
+  command: installer -package {{item}} -target /
+  become: True
+  with_fileglob: "{{playbook_dir}}/tmp/*.pkg"
+
+- name: Clean up
+  become: True
+  file: path={{playbook_dir}}/tmp state=absent
