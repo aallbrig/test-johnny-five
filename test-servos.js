@@ -1,5 +1,5 @@
-const five = require("johnny-five");
-const _ = require("lodash");
+const five = require('johnny-five');
+const _ = require('lodash');
 const board = new five.Board();
 const legServoPins = [12,       9, 8,     5];
 const bodyServoPins = [  11, 10,     7, 6];
@@ -26,7 +26,7 @@ const continuousServoTest = (servos, time = 200) => {
   return setInterval(() => customServoTest(servos), intervalTime);  // ∞
 }
 
-board.on("ready", function () {
+board.on('ready', function () {
   const legServos = legServoPins.map(pin => new five.Servo({
     pin,
     range: [0, 180],
