@@ -23,10 +23,10 @@ function setup_windows {
 }
 
 case "$OSTYPE" in
-  solaris*) echo "SOLARIS" ;;
+  solaris*) echo "SOLARIS not supported.  Please find or report to https://github.com/aallbrig/test-johnny-five/issues" ;;
   darwin*) setup_osx ;;
-  linux*) echo "LINUX" ;;
-  bsd*) echo "BSD" ;;
+  linux*) echo "LINUX not supported.  Please find or report to https://github.com/aallbrig/test-johnny-five/issues" ;;
+  bsd*) echo "BSD not supported.  Please find or report to https://github.com/aallbrig/test-johnny-five/issues" ;;
   msys*) setup_windows ;;
-  *) echo "unknown: $OSTYPE" ;;
+  *) echo "unknown: $OSTYPE not supported.  Please find or report to https://github.com/aallbrig/test-johnny-five/issues" ;;
 esac
