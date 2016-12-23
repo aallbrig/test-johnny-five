@@ -32,7 +32,7 @@ const generateMatryoshkaAnimation = ({
         return animation;  // smallest Matryoshka doll has no doll inside
       } else {
         return _.set(
-          _.cloneDeep(animation)
+          _.cloneDeep(animation),
           'oncomplete',
           () => animationRunner.enqueue(accum)
         );
