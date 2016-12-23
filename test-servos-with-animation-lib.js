@@ -4,6 +4,10 @@ const board = new five.Board();
 const legServoPins = [12,       9, 8,     5];
 const bodyServoPins = [  11, 10,     7, 6];
 const sortServosByPin = (servos) => servos.sort((a, b) => a.pin < b.pin);
+const stopAndEnqueue = _.curry((animationRunner, animation) => {
+  animationRunner.stop();
+  animationRunner.enqueue(animation);
+});
 const generateMatryoshkaAnimation = ({
   targetCollection,
   animationRunner,
@@ -19,24 +23,21 @@ const generateMatryoshkaAnimation = ({
       )],
     []
   );
-  // it's like Russian Matryoshka doll and you gotta build from "smallest" to "larger" (hence .reverse()!)
+  // It's like Russian Matryoshka doll and you gotta build from "smallest" to "larger" (hence .reverse()!)
   // If that doesn't make sense then you probably don't get what's going on in the next few expressions.
   const linkedAnimations = allAnimations
     .reverse()
     .reduce((accum, animation, index) => {
-      const linkedAnimation = (() => {
-        if (index == 0) {
-          return animation;  // smallest Matryoshka doll has no doll inside
-        } else {
-          return _.set(
-            Object.assign({}, animation),
-            'oncomplete',
-            () => animationRunner.enqueue(accum)
-          );
-        }
-      })();
-      return linkedAnimation;
-  }, {});
+      if (index == 0) {
+        return animation;  // smallest Matryoshka doll has no doll inside
+      } else {
+        return _.set(
+          _.cloneDeep(animation)
+          'oncomplete',
+          () => animationRunner.enqueue(accum)
+        );
+      }
+    }, {});
   return linkedAnimations
 }
 
@@ -87,22 +88,14 @@ board.on('ready', function () {
   });
   this.repl.inject({
     bot: {
-      test: () => {
-        continuousTestServos.stop();
-        continuousTestServos.enqueue(singleTestAnimation);
-      },
-      continuousTest: () => {
-        continuousTestServos.stop();
-        continuousTestServos.enqueue(continuousTestAnimation);
-      },
-      stop: () => {
-        continuousTestServos.stop();
-        continuousTestServos.enqueue(resetAnimation)
-      }
+      test: () => stopAndEnqueue(continuousTestServos)(singleTestAnimation),
+      continuousTest: () =>
+        stopAndEnqueue(continuousTestServos)(continuousTestAnimation),
+      stop: () => stopAndEnqueue(continuousTestServos)(resetAnimation)
     },
     allServos,
     continuousTestServos,
     _
   });
-  console.log('Try bot.test(), bot.continuousTest() or bot.stop()');
+  console.log('Try bot.test(), bot.continuousTest(), or bot.stop()');
 });
