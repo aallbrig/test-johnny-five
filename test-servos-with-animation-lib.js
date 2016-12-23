@@ -1,9 +1,9 @@
 const five = require('johnny-five');
 const _ = require('lodash');
+const utils = require('./utilities');
 const board = new five.Board();
 const legServoPins = [12,       9, 8,     5];
 const bodyServoPins = [  11, 10,     7, 6];
-const sortServosByPin = (servos) => servos.sort((a, b) => a.pin < b.pin);
 const stopAndEnqueue = _.curry((animationRunner, animation) => {
   animationRunner.stop();
   animationRunner.enqueue(animation);
@@ -20,16 +20,15 @@ const generateMatryoshkaAnimation = ({
   animationRunner,
   baseAnimation
 }) => targetCollection.reduce(
-  (cumulativeAnimation, {startAt, range: [low, high]}, index) =>
+  (cumulativeAnimation = [], {startAt, range: [low, high]}, index) =>
     [...cumulativeAnimation, _.set(
       _.cloneDeep(baseAnimation),
       `keyFrames[${index}]`,
       [{degrees: 90}, -45, 90, {degrees: 90}]
-    )],
-    []
+    )]
   )
   .reverse()
-  .reduce((accum, animation, index) => {
+  .reduce((accum = {}, animation, index) => {
     if (index == 0) {
       return animation;  // smallest Matryoshka doll has no doll inside
     } else {
@@ -39,10 +38,10 @@ const generateMatryoshkaAnimation = ({
         () => animationRunner.enqueue(accum)
       );
     }
-  }, {});
+  });
 
 board.on('ready', function () {
-  const allServos = new five.Servos(sortServosByPin([
+  const allServos = new five.Servos(utils.sortServosByPin([
     ...legServoPins.map(pin => ({pin, range: [0, 180], startAt: 90})),
     ...bodyServoPins.map(pin => ({pin, range: [45, 135], startAt: 90}))
   ]));
