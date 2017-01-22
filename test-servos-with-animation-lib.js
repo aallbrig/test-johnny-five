@@ -20,12 +20,13 @@ const generateMatryoshkaAnimation = ({
   animationRunner,
   baseAnimation
 }) => targetCollection.reduce(
-  (cumulativeAnimation = [], {startAt, range: [low, high]}, index) =>
+  (cumulativeAnimation, {startAt, range: [low, high]}, index) =>
     [...cumulativeAnimation, _.set(
       _.cloneDeep(baseAnimation),
       `keyFrames[${index}]`,
       [{degrees: 90}, -45, 90, {degrees: 90}]
-    )]
+    )],
+    []
   )
   .reverse()
   .reduce((accum = {}, animation, index) => {
