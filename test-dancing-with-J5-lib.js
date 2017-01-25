@@ -71,22 +71,21 @@ board.on('ready', function () {
   const bot = {
     test: () => stopAndEnqueue(botAnimationRunner)(singleTestAnimation),
     stop: () => stopAndEnqueue(botAnimationRunner)(resetAnimation),
-    turnRight: (timing = 250) => {
-      bodyServos.map({range: [min, max]} => servo.to(max, timing));
+    turnRight: (timing = 135) => {
+      bodyServos.map(servo => servo.to(servo.range[1], timing));
       [RFL].map(servo => servo.to(120, timing));
       [LFL].map(servo => servo.to(140, timing));
     },
-    turnLeft: (toValue = 45) => {
-      bodyServos.map({range: [min, max]} => servo.to(min, 250));
-      [RFL].map(servo => servo.to(140, 250));
-      [LFL].map(servo => servo.to(120, 250));
+    turnLeft: (timing = 135) => {
+      bodyServos.map(servo => servo.to(servo.range[0], timing));
+      [RFL].map(servo => servo.to(140, timing));
+      [LFL].map(servo => servo.to(120, timing));
     },
     expandFrontLegs: (toValue = 100) => {
       [LFL, RFL].map(servo => servo.to(toValue, 250));
     },
-    straightUp: () => {
-      botAnimationRunner.stop();
-      allServos.map({startAt} => servo.to(startAt, 250));
+    straightenUp: () => {
+      allServos.map(servo => servo.to(servo.startAt, 250));
     },
     dance: (danceTiming = DANCE_TIMING) => {
       const dividedDanceTiming = danceTiming / danceMoves.length;
@@ -102,11 +101,14 @@ board.on('ready', function () {
   }
   const danceMoves = [
     bot.turnRight,
-    bot.straightUp,
+    bot.straightenUp,
     bot.turnLeft,
-    bot.straightUp,
+    bot.straightenUp,
+
     bot.expandFrontLegs,
-    bot.straightUp
+    bot.straightenUp,
+    bot.expandFrontLegs,
+    bot.straightenUp
   ];
   this.repl.inject({
     bot,
