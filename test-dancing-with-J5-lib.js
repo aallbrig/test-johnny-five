@@ -4,18 +4,15 @@ const utils = require('./utilities');
 const board = new five.Board();
 const legServoPins = [12,       9, 8,     5];
 const bodyServoPins = [  11, 10,     7, 6];
+// Find BPM values here: http://music.stackexchange.com/questions/4525/list-of-average-genre-tempo-bpm-levels
+const beatsPerMinute = 160;
+const DANCE_TIMING = 4000; // 1500ms
 const stopAndEnqueue = _.curry((animationRunner, animation) => {
   animationRunner.stop();
   animationRunner.enqueue(animation);
 });
-// generateMatryoshkaAnimation({Array[J5Servo], J5AnimationInstance, J5Segment}):J5Segment
-// I didn't find a good way of enqueueing multiple J5Segments onto a J5AnimationInstance
-// (e.g. J5AnimationInstance.enqueue(J5Segment, J5Segment, J5Segment)) since only the last J5Segment
-// is respecred, it seems.
-// Therefore, this specific FN is used to reduce many J5Segments into a single wired
-// J5Segment that enqueues the next J5Segment on J5Segment.oncomplete, hence the "Matryoshka"
-// analogy.  "Matryoshka" analogy makes sense if you think about it, trust me :)
-const generateMatryoshkaAnimation = ({
+// generateLinkedAnimationJSObj({Array[J5Servo], J5AnimationInstance, J5Segment}):J5Segment
+const generateLinkedAnimationJSObj = ({
   targetCollection,
   animationRunner,
   baseAnimation
@@ -41,82 +38,6 @@ const generateMatryoshkaAnimation = ({
     }
   });
 
-const turnRight = ({
-  targetCollection,
-  animationRunner,
-  baseAnimation
-}) => targetCollection.reduce(
-  (cumulativeAnimation, {startAt, range: [low, high]}, index) =>
-    [...cumulativeAnimation, _.set(
-      _.cloneDeep(baseAnimation),
-      `keyFrames[${index}]`,
-      [{degrees: 45}]
-    )],
-    []
-  )
-  .reverse()
-  .reduce((accum = {}, animation, index) => {
-    if (index == 0) {
-      return animation;  // smallest Matryoshka doll has no doll inside
-    } else {
-      return _.set(
-        _.cloneDeep(animation),
-        'oncomplete',
-        () => animationRunner.enqueue(accum)
-      );
-    }
-  });
-const turnLeft = ({
-  targetCollection,
-  animationRunner,
-  baseAnimation
-}) => targetCollection.reduce(
-  (cumulativeAnimation, {startAt, range: [low, high]}, index) =>
-    [...cumulativeAnimation, _.set(
-      _.cloneDeep(baseAnimation),
-      `keyFrames[${index}]`,
-      [{degrees: 135}]
-    )],
-    []
-  )
-  .reverse()
-  .reduce((accum = {}, animation, index) => {
-    if (index == 0) {
-      return animation;  // smallest Matryoshka doll has no doll inside
-    } else {
-      return _.set(
-        _.cloneDeep(animation),
-        'oncomplete',
-        () => animationRunner.enqueue(accum)
-      );
-    }
-  });
-const straightUp = ({
-  targetCollection,
-  animationRunner,
-  baseAnimation
-}) => targetCollection.reduce(
-  (cumulativeAnimation, {startAt, range: [low, high]}, index) =>
-    [...cumulativeAnimation, _.set(
-      _.cloneDeep(baseAnimation),
-      `keyFrames[${index}]`,
-      [{degrees: 90}]
-    )],
-    []
-  )
-  .reverse()
-  .reduce((accum = {}, animation, index) => {
-    if (index == 0) {
-      return animation;  // smallest Matryoshka doll has no doll inside
-    } else {
-      return _.set(
-        _.cloneDeep(animation),
-        'oncomplete',
-        () => animationRunner.enqueue(accum)
-      );
-    }
-  });
-
 board.on('ready', function () {
   const allServos = new five.Servos(utils.sortServosByPin([
     ...legServoPins.map(pin => ({pin, range: [0, 180], startAt: 90, type: 'leg'})),
@@ -124,6 +45,8 @@ board.on('ready', function () {
   ]));
   const bodyServos = allServos.map(a => a).filter(({type}) => type == 'body');
   const legServos = allServos.map(a => a).filter(({type}) => type == 'leg');
+  // Name Schema: (R"ight" || L"eft") + (B"ack" || F"ront") + (B"ody" || L"eg")
+  //   e.g. LBL == "Left Back Leg"
   const [
     LBL, LBB, LFB, LFL,
     RBL, RBB, RFB, RFL
@@ -134,12 +57,12 @@ board.on('ready', function () {
     keyFrames: _.times(8, _.constant([null, {degrees: 90}]))
   };
   const baseTestAnimation = {
-    duration: 750,
+    duration: 500,
     cuePoints: [0, 0.25, 0.5, 0.75, 1],
     keyFrames: _.times(8, () => _.times(3, _.constant(null))),
     oncomplete: () => console.log('override me!  This will display on last')
   };
-  const singleTestAnimation = generateMatryoshkaAnimation({
+  const singleTestAnimation = generateLinkedAnimationJSObj({
     baseAnimation: _.cloneDeep(baseTestAnimation),
     // .map(_ => _) used here to get Array type from Object type
     targetCollection: allServos.map(a => a),
@@ -148,42 +71,50 @@ board.on('ready', function () {
   const bot = {
     test: () => stopAndEnqueue(botAnimationRunner)(singleTestAnimation),
     stop: () => stopAndEnqueue(botAnimationRunner)(resetAnimation),
-    turnLeft: () => stopAndEnqueue(botAnimationRunner)({
-      duration: 750,
-      cuePoints: [0, 0.25, 0.5, 0.75, 1],
-      keyFrames: _.times(8, () => _.times(3, _.constant(null)))
-    }),
-    turnRight: () => {
-      botAnimationRunner.stop();
-      bodyServos.map(servo => servo.to(135));
-      [LFL, RFL].map(servo => servo.to(120));
+    turnRight: (timing = 250) => {
+      bodyServos.map({range: [min, max]} => servo.to(max, timing));
+      [RFL].map(servo => servo.to(120, timing));
+      [LFL].map(servo => servo.to(140, timing));
     },
-    turnLeft: () => {
-      botAnimationRunner.stop();
-      bodyServos.map(servo => servo.to(45));
-      [LFL, RFL].map(servo => servo.to(120));
+    turnLeft: (toValue = 45) => {
+      bodyServos.map({range: [min, max]} => servo.to(min, 250));
+      [RFL].map(servo => servo.to(140, 250));
+      [LFL].map(servo => servo.to(120, 250));
+    },
+    expandFrontLegs: (toValue = 100) => {
+      [LFL, RFL].map(servo => servo.to(toValue, 250));
     },
     straightUp: () => {
       botAnimationRunner.stop();
-      [...bodyServos, LFL, RFL].map(servo => servo.to(90));
+      allServos.map({startAt} => servo.to(startAt, 250));
     },
-    dance: () => {
-      bot.turnRight();
-      setTimeout(() => bot.straightUp(), 500);
-      setTimeout(() => bot.turnLeft(), 1000);
-      setTimeout(() => bot.straightUp(), 1500);
+    dance: (danceTiming = DANCE_TIMING) => {
+      const dividedDanceTiming = danceTiming / danceMoves.length;
+      return danceMoves.map((moveFn, index) => setTimeout(() => moveFn(dividedDanceTiming), index * dividedDanceTiming, dividedDanceTiming));
     },
-    continuousDance: () => setInterval(bot.dance, 2000)
+    continuousDance: (danceTiming = DANCE_TIMING) => {
+      let dance = bot.dance(danceTiming);
+      return setInterval(
+        () => dance = bot.dance(danceTiming),
+        danceTiming
+      );
+    }
   }
+  const danceMoves = [
+    bot.turnRight,
+    bot.straightUp,
+    bot.turnLeft,
+    bot.straightUp,
+    bot.expandFrontLegs,
+    bot.straightUp
+  ];
   this.repl.inject({
     bot,
+    danceMoves,
     allServos,
     bodyServos,
     legServos,
     botAnimationRunner,
-    turnLeft,
-    turnRight,
-    straightUp,
     _
   });
   console.log('Try bot.test(), bot.dance(), or bot.continuousDance()');
