@@ -5,8 +5,9 @@ const board = new five.Board();
 const legServoPins = [12,       9, 8,     5];
 const bodyServoPins = [  11, 10,     7, 6];
 // Find BPM values here: http://music.stackexchange.com/questions/4525/list-of-average-genre-tempo-bpm-levels
-const beatsPerMinute = 160;
-const DANCE_TIMING = 4000; // 1500ms
+const beatsPerMinute = 205;
+const DANCE_TIMING = 1000 / (beatsPerMinute / 60);
+console.log('DANCE_TIMING', DANCE_TIMING);
 const stopAndEnqueue = _.curry((animationRunner, animation) => {
   animationRunner.stop();
   animationRunner.enqueue(animation);
@@ -68,6 +69,7 @@ board.on('ready', function () {
     targetCollection: allServos.map(a => a),
     animationRunner: botAnimationRunner
   });
+  let danceMoves = [];
   const bot = {
     test: () => stopAndEnqueue(botAnimationRunner)(singleTestAnimation),
     stop: () => stopAndEnqueue(botAnimationRunner)(resetAnimation),
@@ -87,19 +89,23 @@ board.on('ready', function () {
     straightenUp: () => {
       allServos.map(servo => servo.to(servo.startAt, 250));
     },
-    dance: (danceTiming = DANCE_TIMING) => {
-      const dividedDanceTiming = danceTiming / danceMoves.length;
-      return danceMoves.map((moveFn, index) => setTimeout(() => moveFn(dividedDanceTiming), index * dividedDanceTiming, dividedDanceTiming));
+    dance: (danceList = danceMoves, danceTiming = DANCE_TIMING) => {
+      return danceList.map((moveFn, index) =>
+        setTimeout(() => moveFn(danceTiming), index * danceTiming)
+      );
     },
-    continuousDance: (danceTiming = DANCE_TIMING) => {
-      let dance = bot.dance(danceTiming);
+    continuousDance: (danceList = danceMoves, danceTiming = DANCE_TIMING) => {
+      // Matt & Kim https://www.youtube.com/watch?v=S3fe8yNl6jg
+      let dance = bot.dance(danceList, danceTiming);
+      const danceLength = dance.length;
+      const intervalTime = danceTiming * danceLength;
       return setInterval(
-        () => dance = bot.dance(danceTiming),
-        danceTiming
+        () => dance = bot.dance(danceList, danceTiming),
+        intervalTime
       );
     }
   }
-  const danceMoves = [
+  danceMoves = [
     bot.turnRight,
     bot.straightenUp,
     bot.turnLeft,
