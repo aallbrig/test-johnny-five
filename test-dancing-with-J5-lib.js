@@ -5,6 +5,7 @@ const board = new five.Board();
 const legServoPins = [12,       9, 8,     5];
 const bodyServoPins = [  11, 10,     7, 6];
 // Find BPM values here: http://music.stackexchange.com/questions/4525/list-of-average-genre-tempo-bpm-levels
+// Find specific song BPM values here: https://jog.fm/workout-songs
 const beatsPerMinute = 205;
 const DANCE_TIMING = 1000 / (beatsPerMinute / 60);
 console.log('DANCE_TIMING', DANCE_TIMING);
@@ -110,11 +111,11 @@ board.on('ready', function () {
     bot.straightenUp,
     bot.turnLeft,
     bot.straightenUp,
-
-    bot.expandFrontLegs,
-    bot.straightenUp,
-    bot.expandFrontLegs,
-    bot.straightenUp
+    //
+    // bot.expandFrontLegs,
+    // bot.straightenUp,
+    // bot.expandFrontLegs,
+    // bot.straightenUp
   ];
   this.repl.inject({
     bot,

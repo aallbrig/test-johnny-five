@@ -17,6 +17,15 @@ Located in this repo are a series of hastily thrown together programs to test fu
 1. Hook up Arduino-bot to your computer via USB.
 1. Run `node test-servos.js` or `node test-servos-with-animation-lib.js` or
 
+### Running programs
+- When running `node test-servos-with-animation-lib.js`, you can pass in configurable values like so:
+
+  ```
+  // Trying to sync up robot with 160 BPM song
+  BPM = 1000 / (160 / 60);
+  bot.dance(danceMoves, BPM);
+  ```
+
 #### Robot Specs
 TODO
 
