@@ -18,7 +18,7 @@ Located in this repo are a series of hastily thrown together programs to test fu
 1. Run `node test-servos.js` or `node test-servos-with-animation-lib.js` or
 
 ### Running programs
-- When running `node test-servos-with-animation-lib.js`, you can pass in configurable values like so:
+- When running `node test-dancing-with-J5-lib.js`, you can pass in configurable values like so:
 
   ```
   // Trying to sync up robot with 160 BPM song
