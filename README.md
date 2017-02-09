@@ -26,8 +26,23 @@ Located in this repo are a series of hastily thrown together programs to test fu
   bot.dance(danceMoves, BPM);
   ```
 
+  You can calculate beats per minute manually using [this website](http://www.beatsperminuteonline.com/) to tap a button every beat.  It's very easy to use!
+
 #### Robot Specs
-TODO
+TODO: Add links to these items
+- 3D printed quad "spider" frame from thingiverse
+- 8 servos, 4 attached to the body and 4 to serve as joint mechanisms.
+- Breadboard or custom made circuit board
+- Wires
+- 7V-12V in 5V out converter(s)
+- (optional) 7V-12V in 3.3V out converter(s)
+- (optional) 3.3V or 5V sensors
+- Driver to interact with Arduino of choice
+- Knowledge of specs to put together bot
+
+  TODO: Create circuit graph of robot
+- Flash Arduino to work with node + Johnny-Five library
+- Create program, do things
 
 #### Robot Buy Guide
 TODO
