@@ -5,9 +5,7 @@ const { generateLinkedAnimationJSObj, sortServosByPin } = require('./utilities')
 const board = new five.Board();
 const legServoPins = [12,       9, 8,     5];
 const bodyServoPins = [  11, 10,     7, 6];
-// Find BPM values here: http://music.stackexchange.com/questions/4525/list-of-average-genre-tempo-bpm-levels
-// Find specific song BPM values here: https://jog.fm/workout-songs
-const beatsPerMinute = 125;
+const beatsPerMinute = 126;
 const DANCE_TIMING = (1000 / (beatsPerMinute / 60)) / 2;
 console.log('DANCE_TIMING', DANCE_TIMING);
 
@@ -27,14 +25,81 @@ board.on('ready', function () {
     bot.turnLeft,
     bot.straightenUp,
 
+    () => {},
+    () => {},
+    () => {},
+    () => {},
+
     bot.expandFrontLegs,
     bot.straightenUp,
     bot.expandFrontLegs,
-    bot.straightenUp
+    bot.straightenUp,
+
+    () => {},
+    () => {},
+    () => {},
+    () => {},
+
+
+    bot.backLegsBehindBody,
+    bot.straightenUp,
+    bot.backLegsBehindBody,
+    bot.straightenUp,
+
+    () => {},
+    () => {},
+    () => {},
+    () => {},
+
+    bot.backLegsBehindBody,
+    bot.straightenUp,
+    bot.frontLegsInFrontOfBody,
+    bot.straightenUp,
+
+    bot.frontLegsInFrontOfBody,
+    () => bot.expandFrontLegs(150),
+    () => {
+      bot.backLegsBehindBody();
+      bot.expandFrontLegs();
+    },
+    bot.straightenUp,
+
+    bot.expandFrontLegs,
+    () => {},
+    bot.expandBackLegs,
+    bot.straightenUp,
+
+    () => {},
+    () => {},
+    () => {},
+    () => {},
+
+    bot.frontLegsInFrontOfBody,
+    bot.straightenUp,
+    () => {
+      bot.frontLegsInFrontOfBody(),
+      bot.expandFrontLegs();
+    },
+    bot.straightenUp,
+
+    () => {},
+    () => {},
+    () => {},
+    () => {},
+
+    () => bot.turnLeft(bot.danceTiming * 2),
+    () => {},
+    () => bot.turnRight(bot.danceTiming * 2),
+    () => {},
+
+    () => {},
+    () => {},
+    bot.straightenUp,
+    () => {},
   ];
   this.repl.inject({
     bot,
     _
   });
-  console.log('Try bot.test(), bot.dance(), or bot.continuousDance()');
+  console.log('Try bot.test(), bot.dance(), bot.continuousDance().  Do not try bot.stop() as it has not been successfully implemented yet!');
 });
