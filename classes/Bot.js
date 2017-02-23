@@ -81,19 +81,33 @@ class Bot {
       ...[LFL].map(servo => servo.to(120, timing))
     ];
   }
-  expandFrontLegs(toValue = 100) {
+  expandFrontLegs(toValue = 100, timing = 250) {
     const [
       LBL, LBB, LFB, LFL,
       RBL, RBB, RFB, RFL
     ] = this.allServos.map(a => a);
-    return [LFL, RFL].map(servo => servo.to(toValue, 250));
+    return [LFL, RFL].map(servo => servo.to(toValue, timing));
   }
-  expandBackLegs(toValue = 100) {
+  expandBackLegs(toValue = 100, timing = 250) {
     const [
       LBL, LBB, LFB, LFL,
       RBL, RBB, RFB, RFL
     ] = this.allServos.map(a => a);
-    return [LBL, RBL].map(servo => servo.to(toValue, 250));
+    return [LBL, RBL].map(servo => servo.to(toValue, timing));
+  }
+  expandLeftLegs(toValue = 100, timing = 250) {
+    const [
+      LBL, LBB, LFB, LFL,
+      RBL, RBB, RFB, RFL
+    ] = this.allServos.map(a => a);
+    return [LBL, LFL].map(servo => servo.to(toValue, timing));
+  }
+  expandRightLegs(toValue = 100, timing = 250) {
+    const [
+      LBL, LBB, LFB, LFL,
+      RBL, RBB, RFB, RFL
+    ] = this.allServos.map(a => a);
+    return [RBL, RFL].map(servo => servo.to(toValue, timing));
   }
   straightenUp(timing = 250) {
     return this.allServos.map(servo => servo.to(servo.startAt, timing));
@@ -106,6 +120,30 @@ class Bot {
     return [
       ...[LBB].map(servo => servo.to(servo.range[1], timing)),
       ...[RBB].map(servo => servo.to(servo.range[0], timing))
+    ];
+  }
+  dabLeft() {
+    const [
+      LBL, LBB, LFB, LFL,
+      RBL, RBB, RFB, RFL
+    ] = this.allServos.map(a => a);
+    return [
+      ...[LBL, LFL, RFL, LFB, RFB].map(servo => servo.to(130)),
+      ...[RBL].map(servo => servo.to(60))
+    ];
+  }
+  dabRight() {
+    const [
+      LBL, LBB, LFB, LFL,
+      //Leg          Leg
+      //   Body Body        <-- The front
+      //   Body Body        <-- of Robot
+      //Leg          Leg
+      RBL, RBB, RFB, RFL
+    ] = this.allServos.map(a => a);
+    return [
+      ...[LBL, LFL, RFL, LFB, RFB].map(servo => servo.to(60)),
+      ...[RBL].map(servo => servo.to(130))
     ];
   }
   frontLegsInFrontOfBody(timing = 250) {

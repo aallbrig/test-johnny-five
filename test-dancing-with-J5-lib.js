@@ -87,15 +87,29 @@ board.on('ready', function () {
     () => {},
     () => {},
 
-    () => bot.turnLeft(bot.danceTiming * 2),
-    () => {},
-    () => bot.turnRight(bot.danceTiming * 2),
-    () => {},
+    () => bot.expandLeftLegs(140),
+    () => bot.expandRightLegs(140),
+    () => bot.expandLeftLegs(90),
+    () => bot.expandRightLegs(90),
 
     () => {},
     () => {},
-    bot.straightenUp,
     () => {},
+    () => {},
+
+    () => {
+      bot.expandLeftLegs(30);
+      bot.expandRightLegs(30);
+    },
+    () => {
+      bot.expandLeftLegs(150);
+      bot.expandRightLegs(150);
+    },
+    () => {
+      bot.expandLeftLegs(30);
+      bot.expandRightLegs(30);
+    },
+    bot.straightenUp
   ];
   this.repl.inject({
     bot,

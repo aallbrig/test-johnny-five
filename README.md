@@ -30,7 +30,7 @@ Located in this repo are a series of hastily thrown together programs to test fu
 
 #### Robot Specs
 TODO: Add links to these items
-- 3D printed quad "spider" frame from thingiverse
+- 3D printed quad "spider" frame from thingiverse (http://www.thingiverse.com/thing:272233)
 - 8 servos, 4 attached to the body and 4 to serve as joint mechanisms.
 - Breadboard or custom made circuit board
 - Wires
