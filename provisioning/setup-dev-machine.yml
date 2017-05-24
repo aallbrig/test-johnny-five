@@ -1,4 +1,6 @@
 - name: Install prereq software
-  hosts: local
+  hosts:
+    - local
+    - vagrant
   roles:
     - arduino-dev-machine
