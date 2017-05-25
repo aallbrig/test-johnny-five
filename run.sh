@@ -14,7 +14,7 @@ function setup_osx {
   sudo ansible-galaxy install -r provisioning/requirements.yml
 
   # Provision dev machine.
-  ansible-playbook provisioning/setup-dev-machine.yml
+  ansible-playbook provisioning/setup-dev-machine.yml -vv
   exit 0
 }
 

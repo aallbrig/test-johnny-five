@@ -53,10 +53,10 @@ class Bot {
   //   e.g. LBL == "Left Back Leg"
   // const [
   //   LBL, LBB, LFB, LFL,
-  //   //Leg          Leg
-  //   //   Body Body        <-- The front
-  //   //   Body Body        <-- of Robot
-  //   //Leg          Leg
+  ////   Leg          Leg
+  ////_____|Body Body|       <-- The front
+  ////-----|Body Body|       <-- of Robot
+  ////   Leg          Leg
   //   RBL, RBB, RFB, RFL
   // ] = this.allServos.map(a => a);
   turnRight(timing = 135) {

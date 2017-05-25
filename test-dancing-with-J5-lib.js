@@ -5,7 +5,7 @@ const { generateLinkedAnimationJSObj, sortServosByPin } = require('./utilities')
 const board = new five.Board();
 const legServoPins = [12,       9, 8,     5];
 const bodyServoPins = [  11, 10,     7, 6];
-const beatsPerMinute = 126;
+const beatsPerMinute = 114;
 const DANCE_TIMING = (1000 / (beatsPerMinute / 60)) / 2;
 console.log('DANCE_TIMING', DANCE_TIMING);
 
@@ -39,7 +39,6 @@ board.on('ready', function () {
     () => {},
     () => {},
     () => {},
-
 
     bot.backLegsBehindBody,
     bot.straightenUp,
