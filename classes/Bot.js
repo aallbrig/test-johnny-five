@@ -142,8 +142,9 @@ class Bot {
       RBL, RBB, RFB, RFL
     ] = this.allServos.map(a => a);
     return [
-      ...[LBL, LFL, RFL, LFB, RFB].map(servo => servo.to(60)),
-      ...[RBL].map(servo => servo.to(130))
+      ...[LBL, RFL, LFB, RFB].map(servo => servo.to(60)),
+      ...[RBL].map(servo => servo.to(130)),
+      ...[LFL].map(servo => servo.to(180))
     ];
   }
   frontLegsInFrontOfBody(timing = 250) {

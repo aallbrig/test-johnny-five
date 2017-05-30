@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const five = require('johnny-five');
 const Bot = require('./classes/Bot');
-const { generateLinkedAnimationJSObj, sortServosByPin } = require('./utilities');
+const { sortServosByPin } = require('./utilities');
 const board = new five.Board();
 const legServoPins = [12,       9, 8,     5];
 const bodyServoPins = [  11, 10,     7, 6];
