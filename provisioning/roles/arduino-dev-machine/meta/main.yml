@@ -1,3 +1,9 @@
 ---
 dependencies:
-  - {role: geerlingguy.homebrew}
+- role: leonidas.nvm
+  nvm:
+    user: vagrant
+    version: "v0.33.2"
+    node_version: 6
+  become: True
+  become_user: root

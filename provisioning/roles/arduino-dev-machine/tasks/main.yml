@@ -1,5 +1,10 @@
 ---
   - include: osx_install-drivers.yml
     when: ansible_os_family == 'Darwin'
+
+  - name: Ensure ~/.nvm/nvm.sh is sourced in ~/.bashrc
+    lineinfile:
+      path: /home/vagrant/.bashrc
+      regexp: '^source /home/vagrant/.nvm/nvm.sh'
+      line: 'source /home/vagrant/.nvm/nvm.sh'
   
-  - include: node.yml

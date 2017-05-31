@@ -3,3 +3,5 @@ tmp
 **/*.retry
 **/.DS_Store
 .vagrant
+.Trash-*
+.cache
