@@ -1,11 +1,11 @@
 const _ = require('lodash');
 const five = require('johnny-five');
 const Bot = require('./classes/Bot');
-const { generateLinkedAnimationJSObj, sortServosByPin } = require('./utilities');
+const { sortServosByPin } = require('./utilities');
 const board = new five.Board();
 const legServoPins = [12,       9, 8,     5];
 const bodyServoPins = [  11, 10,     7, 6];
-const beatsPerMinute = 126;
+const beatsPerMinute = 114;
 const DANCE_TIMING = (1000 / (beatsPerMinute / 60)) / 2;
 console.log('DANCE_TIMING', DANCE_TIMING);
 
@@ -39,7 +39,6 @@ board.on('ready', function () {
     () => {},
     () => {},
     () => {},
-
 
     bot.backLegsBehindBody,
     bot.straightenUp,
@@ -87,15 +86,29 @@ board.on('ready', function () {
     () => {},
     () => {},
 
-    () => bot.turnLeft(bot.danceTiming * 2),
-    () => {},
-    () => bot.turnRight(bot.danceTiming * 2),
-    () => {},
+    () => bot.expandLeftLegs(140),
+    () => bot.expandRightLegs(140),
+    () => bot.expandLeftLegs(90),
+    () => bot.expandRightLegs(90),
 
     () => {},
     () => {},
-    bot.straightenUp,
     () => {},
+    () => {},
+
+    () => {
+      bot.expandLeftLegs(30);
+      bot.expandRightLegs(30);
+    },
+    () => {
+      bot.expandLeftLegs(150);
+      bot.expandRightLegs(150);
+    },
+    () => {
+      bot.expandLeftLegs(30);
+      bot.expandRightLegs(30);
+    },
+    bot.straightenUp
   ];
   this.repl.inject({
     bot,
